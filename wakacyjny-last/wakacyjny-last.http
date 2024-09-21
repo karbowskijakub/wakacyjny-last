@@ -1,0 +1,6 @@
+@wakacyjny_last_HostAddress = http://localhost:5239
+
+GET {{wakacyjny_last_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,6 @@
+@wakacyjny_last.WebApi_HostAddress = http://localhost:5125
+
+GET {{wakacyjny_last}}/weatherforecast/
+Accept: application/json
+
+###
