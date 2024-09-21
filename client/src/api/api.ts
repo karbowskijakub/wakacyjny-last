@@ -35,37 +35,46 @@ export const postLogin = async (data: { email: string; password: string }) => {
 };
 
 export const postPost = async (formData: FormData) => {
-  try {
-    const response = await axios.post(`${url}/api/Posts`, formData, {
-      params: {
-        useCookies: true,
-      },
-      withCredentials: true,
-      headers: {
-        accept: "application/json",
-        "Content-Type": "multipart/form-data",
-      },
-    });
+  // Log each key-value pair in the FormData
+  const formDataObject: { [key: string]: string | Blob } = {};
 
-    return response.data;
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        const status = error.response.status;
-        if (status === 401) {
-          throw new Error("INVALID_CREDENTIALS");
-        } else if (status === 403) {
-          throw new Error("ACCOUNT_NOT_CONFIRMED");
-        } else {
-          throw new Error("GENERAL_ERROR");
-        }
-      } else {
-        throw new Error("UNEXPECTED_ERROR");
-      }
-    } else {
-      throw new Error("UNEXPECTED_ERROR");
-    }
-  }
+  formData.forEach((value, key) => {
+    formDataObject[key] = value;
+  });
+
+  // Log the plain object
+  console.log("FormData Object:", formDataObject);
+  // try {
+  //   const response = await axios.post(`${url}/api/Posts`, formData, {
+  //     params: {
+  //       useCookies: true,
+  //     },
+  //     withCredentials: true,
+  //     headers: {
+  //       accept: "application/json",
+  //       "Content-Type": "multipart/form-data",
+  //     },
+  //   });
+
+  //   return response.data;
+  // } catch (error: unknown) {
+  //   if (axios.isAxiosError(error)) {
+  //     if (error.response) {
+  //       const status = error.response.status;
+  //       if (status === 401) {
+  //         throw new Error("INVALID_CREDENTIALS");
+  //       } else if (status === 403) {
+  //         throw new Error("ACCOUNT_NOT_CONFIRMED");
+  //       } else {
+  //         throw new Error("GENERAL_ERROR");
+  //       }
+  //     } else {
+  //       throw new Error("UNEXPECTED_ERROR");
+  //     }
+  //   } else {
+  //     throw new Error("UNEXPECTED_ERROR");
+  //   }
+  // }
 };
 
 export const getAllPosts = async () => {
@@ -101,7 +110,6 @@ export const getAllPosts = async () => {
   }
 };
 
-
 export const postLogout = async () => {
   const response = await axios.post(
     `${url}/logout`,
@@ -122,9 +130,8 @@ export const postRegister = async (data: {
   password: string;
   firstName: string;
   lastName: string;
-  terms:boolean;
+  terms: boolean;
 }) => {
-  
   const response = await axios.post(`${url}/register`, data);
   return response.data;
 };
