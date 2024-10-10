@@ -36,14 +36,14 @@ namespace wakacyjny_last.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 if (string.IsNullOrEmpty(userId))
                 {
                     return Unauthorized("Użytkownik nie jest zalogowany.");
                 }
 
-                await _postsRepository.AddPostAsync(postDto, userId);
+                await _postsRepository.AddPostAsync(postDto,  userId); 
 
                 return Ok(new { message = "Post został dodany pomyślnie." });
             }

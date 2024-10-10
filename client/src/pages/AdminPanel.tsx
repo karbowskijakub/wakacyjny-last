@@ -35,7 +35,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/scroll-area";
-
+import { Checkbox } from "@/components/ui/checkbox";
 const formSchema = z.object({
   numberOfPerson: z
     .string()
@@ -61,7 +61,7 @@ const formSchema = z.object({
     .string()
     .regex(/^\d+$/, { message: "Pole musi zawierać tylko cyfry." }),
   comments: z.string(),
-
+  isPremium: z.boolean().optional(),
   allDate: z
     .object({
       from: z.date().refine((date) => !isNaN(date.getTime()), {
@@ -74,6 +74,15 @@ const formSchema = z.object({
     .refine((data) => data.from < data.to, {
       message: "Data początkowa musi być przed datą końcową.",
     }),
+  regionHolidaysName: z
+    .string()
+    .min(1, { message: "Pole nie może być puste." }),
+  cityHolidaysName: z.string().min(1, { message: "Pole nie może być puste." }),
+  countryHolidaysName: z
+    .string()
+    .min(1, { message: "Pole nie może być puste." }),
+  hotelHolidaysName: z.string().min(1, { message: "Pole nie może być puste." }),
+  travelAgency: z.string().min(1, { message: "Pole nie może być puste." }),
 });
 
 const AdminPanel = () => {
@@ -98,6 +107,12 @@ const AdminPanel = () => {
       travelAgencyOpinions: "",
       comments: "",
       allDate: undefined,
+      isPremium: false,
+      regionHolidaysName: "",
+      cityHolidaysName: "",
+      countryHolidaysName: "",
+      hotelHolidaysName: "",
+      travelAgency: "",
     },
   });
 
@@ -155,6 +170,7 @@ const AdminPanel = () => {
 
   return (
     <section className="h-full w-full">
+       <ScrollArea className="h-full w-full p-3">
       <Dialog>
         <div className="flex justify-center p-5">
           <DialogTrigger asChild>
@@ -230,7 +246,18 @@ const AdminPanel = () => {
                       </FormItem>
                     )}
                   />
-
+                  <FormField
+                    control={form.control}
+                    name="hotelHolidaysName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input placeholder="Nazwa hotelu" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="hotelRating"
@@ -285,7 +312,42 @@ const AdminPanel = () => {
                       </FormItem>
                     )}
                   />
-
+                  <FormField
+                    control={form.control}
+                    name="regionHolidaysName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input placeholder="Region" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="cityHolidaysName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input placeholder="Miasto" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="countryHolidaysName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input placeholder="Państwo" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="googleOpinions"
@@ -324,7 +386,18 @@ const AdminPanel = () => {
                       </FormItem>
                     )}
                   />
-
+                  <FormField
+                    control={form.control}
+                    name="travelAgency"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input placeholder="Biuro podróży" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="comments"
@@ -332,6 +405,26 @@ const AdminPanel = () => {
                       <FormItem>
                         <FormControl>
                           <Input placeholder="Komentarz" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="isPremium"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel className="mr-4">
+                          Czy to oferta premium?:
+                        </FormLabel>
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            onBlur={field.onBlur}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -357,6 +450,7 @@ const AdminPanel = () => {
           </div>
         )}
       </div>
+      </ScrollArea>
     </section>
   );
 };

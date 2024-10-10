@@ -1,5 +1,6 @@
 import axios from "axios";
 import url from "./server-connection";
+import { Post } from "@/interfaces/Post";
 
 export const postLogin = async (data: { email: string; password: string }) => {
   try {
@@ -35,6 +36,7 @@ export const postLogin = async (data: { email: string; password: string }) => {
 };
 
 export const postPost = async (formData: FormData) => {
+  
   // Log each key-value pair in the FormData
   const formDataObject: { [key: string]: string | Blob } = {};
 
@@ -42,44 +44,54 @@ export const postPost = async (formData: FormData) => {
     formDataObject[key] = value;
   });
 
-  // Log the plain object
-  console.log("FormData Object:", formDataObject);
-  // try {
-  //   const response = await axios.post(`${url}/api/Posts`, formData, {
-  //     params: {
-  //       useCookies: true,
-  //     },
-  //     withCredentials: true,
-  //     headers: {
-  //       accept: "application/json",
-  //       "Content-Type": "multipart/form-data",
-  //     },
-  //   });
+  // Remove the 'allDate' key from the object if it exists
+  delete formDataObject["allDate"];
 
-  //   return response.data;
-  // } catch (error: unknown) {
-  //   if (axios.isAxiosError(error)) {
-  //     if (error.response) {
-  //       const status = error.response.status;
-  //       if (status === 401) {
-  //         throw new Error("INVALID_CREDENTIALS");
-  //       } else if (status === 403) {
-  //         throw new Error("ACCOUNT_NOT_CONFIRMED");
-  //       } else {
-  //         throw new Error("GENERAL_ERROR");
-  //       }
-  //     } else {
-  //       throw new Error("UNEXPECTED_ERROR");
-  //     }
-  //   } else {
-  //     throw new Error("UNEXPECTED_ERROR");
-  //   }
-  // }
+  // Add the current date to the object
+  const currentDate = new Date().toISOString();
+  formDataObject["dateOffer"] = currentDate;
+
+  // Log the plain object with the current date
+  console.log("FormData Object:", formDataObject);
+  
+  try {
+    const response = await axios.post(`${url}/api/Posts`, formDataObject, {
+      params: {
+        useCookies: true,
+      },
+      withCredentials: true,
+      headers: {
+        accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        const status = error.response.status;
+        if (status === 401) {
+          throw new Error("INVALID_CREDENTIALS");
+        } else if (status === 403) {
+          throw new Error("ACCOUNT_NOT_CONFIRMED");
+        } else {
+          throw new Error("GENERAL_ERROR");
+        }
+      } else {
+        throw new Error("UNEXPECTED_ERROR");
+      }
+    } else {
+      throw new Error("UNEXPECTED_ERROR");
+    }
+  }
 };
 
-export const getAllPosts = async () => {
+
+
+export const getAllPosts = async (): Promise<Post[]> => {
   try {
-    const response = await axios.get(`${url}/api/Posts`, {
+    const response = await axios.get<Post[]>(`${url}/api/Posts`, {
       params: {
         useCookies: true,
       },
