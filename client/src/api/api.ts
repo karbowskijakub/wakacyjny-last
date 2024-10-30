@@ -1,5 +1,6 @@
 import axios from "axios";
 import url from "./server-connection";
+import { Post } from "@/interfaces/Post";
 
 export const postLogin = async (data: { email: string; password: string }) => {
   try {
@@ -35,8 +36,26 @@ export const postLogin = async (data: { email: string; password: string }) => {
 };
 
 export const postPost = async (formData: FormData) => {
+  
+  // Log each key-value pair in the FormData
+  const formDataObject: { [key: string]: string | Blob } = {};
+
+  formData.forEach((value, key) => {
+    formDataObject[key] = value;
+  });
+
+  // Remove the 'allDate' key from the object if it exists
+  delete formDataObject["allDate"];
+
+  // Add the current date to the object
+  const currentDate = new Date().toISOString();
+  formDataObject["dateOffer"] = currentDate;
+
+  // Log the plain object with the current date
+  console.log("FormData Object:", formDataObject);
+  
   try {
-    const response = await axios.post(`${url}/api/Posts`, formData, {
+    const response = await axios.post(`${url}/api/Posts`, formDataObject, {
       params: {
         useCookies: true,
       },
@@ -68,9 +87,11 @@ export const postPost = async (formData: FormData) => {
   }
 };
 
-export const getAllPosts = async () => {
+
+
+export const getAllPosts = async (): Promise<Post[]> => {
   try {
-    const response = await axios.get(`${url}/api/Posts`, {
+    const response = await axios.get<Post[]>(`${url}/api/Posts`, {
       params: {
         useCookies: true,
       },
@@ -101,7 +122,6 @@ export const getAllPosts = async () => {
   }
 };
 
-
 export const postLogout = async () => {
   const response = await axios.post(
     `${url}/logout`,
@@ -122,9 +142,8 @@ export const postRegister = async (data: {
   password: string;
   firstName: string;
   lastName: string;
-  terms:boolean;
+  terms: boolean;
 }) => {
-  
   const response = await axios.post(`${url}/register`, data);
   return response.data;
 };

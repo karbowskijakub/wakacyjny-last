@@ -8,11 +8,11 @@ import {
 import LoginForm from './pages/LoginForm';
 import RegisterForm from './pages/RegisterForm';
 import Layout from './layout/Layout'; 
-import MyProfilePanelSection from './pages/MyProfilePanelSection';
 import SearchSection from './pages/SearchSection';
 import ConfirmEmail from './pages/ConfirmEmail';
 import ResetPasswordForm from './pages/ResetPasswordForm';
 import AdminPanel from './pages/AdminPanel';
+import MainPage from './pages/MainPage';
 
 const queryClient = new QueryClient();
 
@@ -27,7 +27,7 @@ function App() {
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/resetPassword" element={<ResetPasswordForm />} />
           <Route element={<Layout />}>
-            <Route path="/main" element={<MyProfilePanelSection />} />
+            <Route path="/strona-glowna" element={<MainPage />} />
             <Route path="/panel-admina" element={<AdminPanel />} />
             <Route path="/search" element={<SearchSection />} />
           </Route>
